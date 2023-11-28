@@ -12,5 +12,4 @@ export enum ErrorType {
     ERROR_FINALIZING_ARCHIVE = 'Error occurred while finalizing the archive.',
     UNKNOWN_ARCHIVE_ERROR = 'Unknown error occurred while creating the archive.',
     GENERIC_ERROR = 'Something went wrong on our end. Please try again later.',
-    TEA_POT = "I'm a teapot."
 }
