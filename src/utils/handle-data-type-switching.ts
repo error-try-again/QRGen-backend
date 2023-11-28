@@ -8,9 +8,5 @@ export const handleDataTypeSwitching = <T extends AllRequests>(
     if (!Object.keys(formatters).includes(type)) {
         throw new Error('Invalid type provided.');
     }
-
-    // TODO: Need to find a better means of sanitizing input
-    // return formatters[type as keyof RequestTypeMap](sanitizeInput(data));
-
     return formatters[type as keyof RequestTypeMap](data);
 };

@@ -20,6 +20,7 @@ export interface QRGenericDataArray<T extends AllRequests> {
 
 export interface GenerateQRParameters {
     data: string;
+    margin?: number;
     size: string | number;
     precision: QRCodeErrorCorrectionLevel;
 }

@@ -1,11 +1,12 @@
 import QRCode from 'qrcode';
 import {DEFAULT_QR_SIZE} from '../config.ts';
 import {
-  GenerateQRParameters
+    GenerateQRParameters
 } from '../ts/interfaces/qr-data-paramaters-interfaces.ts';
 
 export const generateQR = async ({
                                      data,
+                                     margin,
                                      size,
                                      precision
                                  }: GenerateQRParameters): Promise<string> => {
@@ -17,7 +18,7 @@ export const generateQR = async ({
 
     return QRCode.toDataURL(data, {
         errorCorrectionLevel: precision,
-        margin: 1,
+        margin: margin,
         type: 'image/png',
         width: parsedSize
     });
