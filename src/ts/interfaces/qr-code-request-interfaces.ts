@@ -90,3 +90,7 @@ export interface MeCardRequest {
     website?: string;
     zipcode?: string;
 }
+
+export interface GoogleReviewRequest {
+    placeId?: string;
+}

@@ -4,8 +4,8 @@ import {validators} from "./validation-mapping.ts";
 import {MAX_QR_CODES} from "../config.ts";
 import {ErrorType} from "../ts/enums/error-enum.ts";
 import {
-  QRGenericData,
-  QRGenericDataArray
+    QRGenericData,
+    QRGenericDataArray
 } from "../ts/interfaces/qr-data-paramaters-interfaces.ts";
 
 // Validates the qrData for a batch of QR codes

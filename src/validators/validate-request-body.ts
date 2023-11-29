@@ -30,11 +30,11 @@ export function errorHandlingMapping(error: Error, response: Response): void {
     handleErrorStatus({errorType, response, statusCode});
 }
 
-export const validateRequest = (request: Request, next: () => void): void => {
-    if (typeof request.body === 'object') {
-        const {type} = request.body;
+export const validateRequest = ({body}: Request, next: () => void): void => {
+    if (typeof body === 'object') {
+        const {type} = body;
         if (type) {
-            validateQRData(request.body);
+            validateQRData(body);
             next();
         } else {
             throw new Error(ErrorType.MISSING_REQUEST_TYPE);

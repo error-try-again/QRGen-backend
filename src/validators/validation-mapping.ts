@@ -5,6 +5,7 @@ import {
     EmailRequest,
     EventRequest,
     GeoLocationRequest,
+    GoogleReviewRequest,
     MeCardRequest,
     PhoneRequest,
     SMSRequest,
@@ -29,8 +30,11 @@ export const validators: {
     Event({endTime, startTime, venue}: EventRequest) {
         return Boolean(venue && startTime && endTime);
     },
-    GeoLocation: ({latitude, longitude}: GeoLocationRequest) => {
+    GeoLocation({latitude, longitude}: GeoLocationRequest) {
         return Boolean(latitude && longitude);
+    },
+    GoogleReview({placeId}: GoogleReviewRequest) {
+        return Boolean(placeId);
     },
     MeCard({firstName, lastName, phone1}: MeCardRequest) {
         return Boolean(firstName && lastName && phone1);

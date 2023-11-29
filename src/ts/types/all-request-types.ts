@@ -2,7 +2,7 @@ import {
     CryptoRequest,
     EmailRequest,
     EventRequest,
-    GeoLocationRequest,
+    GeoLocationRequest, GoogleReviewRequest,
     MeCardRequest,
     PhoneRequest,
     SMSRequest,
@@ -25,19 +25,21 @@ export type AllRequests =
     | CryptoRequest
     | VCardRequest
     | MeCardRequest
-    | ZoomRequest;
+    | ZoomRequest
+    | GoogleReviewRequest;
 
 export type RequestTypeMap = {
-    Text: TextRequest;
-    Url: UrlRequest;
+    Crypto: CryptoRequest;
     Email: EmailRequest;
+    Event: EventRequest;
+    GeoLocation: GeoLocationRequest;
+    GoogleReview: GoogleReviewRequest;
+    MeCard: MeCardRequest;
     Phone: PhoneRequest;
     SMS: SMSRequest;
-    GeoLocation: GeoLocationRequest;
-    WiFi: WifiRequest;
-    Event: EventRequest;
-    Crypto: CryptoRequest;
+    Text: TextRequest;
+    Url: UrlRequest;
     VCard: VCardRequest;
-    MeCard: MeCardRequest;
+    WiFi: WifiRequest;
     Zoom: ZoomRequest;
 };

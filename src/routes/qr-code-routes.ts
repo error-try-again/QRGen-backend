@@ -9,7 +9,10 @@ import {
     validateRequest
 } from '../validators/validate-request-body.ts';
 import {asyncErrorHandler} from '../middleware/async-error-handler.ts';
-import {handlePlaceRetrieval} from "../services/retrieve-place.ts";
+import {
+    retrievePlaceByLatLng,
+    handleSearchAutocomplete
+} from "../services/retrieve-place.ts";
 
 const router: Router = express.Router();
 
@@ -39,12 +42,19 @@ router.post(
 );
 
 router.post('/places', asyncErrorHandler(async (request: Request, response: Response) => {
-            const {body} = request;
-            console.log(body.latitude, body.longitude);
-            const place =
-                await handlePlaceRetrieval(body.latitude, body.longitude);
+        const {body: {latitude, longitude}} = request;
+        await retrievePlaceByLatLng(latitude, longitude).then((place) => {
             response.json({place});
-           }
+        });
+    }
+));
+
+router.post('/autocomplete', asyncErrorHandler(async (request: Request, response: Response) => {
+        const {body: {location}} = request;
+        await handleSearchAutocomplete(location).then((res) => {
+            response.json({res});
+        });
+    }
 ));
 
 router.get('/health', asyncErrorHandler(async (_: Request, response: Response) => {

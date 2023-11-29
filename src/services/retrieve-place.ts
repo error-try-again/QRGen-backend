@@ -1,45 +1,67 @@
 import {Client} from "@googlemaps/google-maps-services-js";
-import {GOOGLE_MAPS_API_KEY} from "../config.ts";
+import {GOOGLE_MAPS_API_KEY} from "../config";
+
+const client = new Client({});
 
 function getApiKey(): string {
-    if (GOOGLE_MAPS_API_KEY) {
-        return GOOGLE_MAPS_API_KEY;
-    } else {
+    if (!GOOGLE_MAPS_API_KEY) {
         throw new Error('GOOGLE_MAPS_API_KEY is missing in the environment variables.');
     }
+    return GOOGLE_MAPS_API_KEY;
 }
 
-async function geocodeAddress(client: Client, apiKey: string, address: string) {
+async function geocodeAddress(address: string): Promise<any> {
+    const apiKey = getApiKey();
     try {
-        const geocodeResponse = await client.geocode({
-            params: { key: apiKey, address }
-        });
-        console.log(`Geocode result: ${JSON.stringify(geocodeResponse.data.results[0])}`);
+        const response = await client.geocode({params: {key: apiKey, address}});
+        return response.data.results;
     } catch (error) {
-        console.error('Error in geocoding:', error);
+        throw error;
     }
 }
 
-async function reverseGeocodeLatLng(client: Client, apiKey: string, lat: number, lng: number) {
+async function reverseGeocodeLatLng(lat: number, lng: number): Promise<any> {
+    const apiKey = getApiKey();
     try {
-        const reverseGeocodeResponse = await client.reverseGeocode({
-            params: { key: apiKey, latlng: { lat, lng } }
+        const response = await client.reverseGeocode({
+            params: {
+                key: apiKey,
+                latlng: {lat, lng}
+            }
         });
-        console.log(`Reverse Geocode result: ${JSON.stringify(reverseGeocodeResponse.data.results[0])}`);
+        return response.data.results;
     } catch (error) {
-        console.error('Error in reverse geocoding:', error);
+        throw error;
     }
 }
 
-export const handlePlaceRetrieval = async (latitude: number, longitude: number): Promise<void> => {
+export async function handleSearchAutocomplete(searchString: string): Promise<any> {
     try {
-        const client = new Client({});
         const apiKey = getApiKey();
-        const customAddress = 'Perth 4WD & Commercial Centre';
-
-        await geocodeAddress(client, apiKey, customAddress);
-        await reverseGeocodeLatLng(client, apiKey, latitude, longitude);
+        const response = await client.placeAutocomplete({
+            params: {
+                key: apiKey,
+                input: searchString
+            }
+        });
+        return response.data.predictions;
     } catch (error) {
-        console.error('Error fetching data:', error);
+        throw error;
+    }
+}
+
+export const retrievePlaceByLatLng = async (latitude: number, longitude: number): Promise<void> => {
+    try {
+        await reverseGeocodeLatLng(latitude, longitude);
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const retrievePlaceByAddress = async (address: string): Promise<void> => {
+    try {
+        await geocodeAddress(address);
+    } catch (error) {
+        throw error;
     }
 };
