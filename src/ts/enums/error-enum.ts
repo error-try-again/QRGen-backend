@@ -3,7 +3,7 @@ export enum ErrorType {
     MISSING_CUSTOM_DATA = 'Custom data in the request body is missing.',
     MISSING_REQUEST_TYPE = 'Request type is missing.',
     INVALID_TYPE = 'Request type is invalid.',
-    DUPLICATE_QR_CODES = 'Duplicate QR codes are not allowed.',
+    DUPLICATE_QR_CODES = 'Duplicate QR codes found. Please remove duplicates and try again.',
     EXCEEDS_MAX_LIMIT = 'Exceeds max limit of 1000 QR codes.',
     BATCH_MISSING_DATA_BODY = 'Request body data is missing for one or more QR codes.',
     BATCH_MISSING_CUSTOM_DATA = 'Custom data in the request body is missing for one or more QR codes.',

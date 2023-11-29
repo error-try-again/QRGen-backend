@@ -10,8 +10,7 @@ import {
 } from '../validators/validate-request-body.ts';
 import {asyncErrorHandler} from '../middleware/async-error-handler.ts';
 import {
-    retrievePlaceByLatLng,
-    handleSearchAutocomplete
+    handleSearchAutocomplete, reverseGeocodeLatLng
 } from "../services/retrieve-place.ts";
 
 const router: Router = express.Router();
@@ -43,7 +42,7 @@ router.post(
 
 router.post('/places', asyncErrorHandler(async (request: Request, response: Response) => {
         const {body: {latitude, longitude}} = request;
-        await retrievePlaceByLatLng(latitude, longitude).then((place) => {
+        await reverseGeocodeLatLng(latitude, longitude).then((place) => {
             response.json({place});
         });
     }
