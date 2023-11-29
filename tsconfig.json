@@ -2,7 +2,10 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "CommonJS",
-    "lib": ["ES2022"],
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
@@ -19,5 +22,8 @@
     "noFallthroughCasesInSwitch": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["src/**/*.ts"],  // Source files to be compiled
+  "include": [
+    "src/**/*.ts"
+  ]
+  // Source files to be compiled
 }
