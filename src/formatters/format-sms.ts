@@ -1,5 +1,5 @@
 import {SMSRequest} from '../ts/interfaces/qr-code-request-interfaces.ts';
 
-export function formatSMS(data: SMSRequest) {
-    return `sms:${data.phone}?body=${data.sms}`;
+export function formatSMS({phone, sms}: SMSRequest) {
+    return `smsto:${phone}:${sms}`;
 }
