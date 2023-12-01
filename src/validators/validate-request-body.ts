@@ -19,13 +19,17 @@ export function errorHandlingMapping(error: Error, response: Response): void {
         [ErrorType.UNKNOWN_ARCHIVE_ERROR]: 500
     };
 
-    const statusCode = errorMappings[error.message] || 500;
+    // Improved error type validation
+    const errorType = Object.values(ErrorType).includes(error.message as ErrorType)
+        ? (error.message as ErrorType)
+        : ErrorType.GENERIC_ERROR;
 
-    // Ensure error.message is a valid ErrorType or use the generic fallback error.
-    const errorType =
-        error.message in ErrorType
-            ? (error.message as ErrorType)
-            : ErrorType.GENERIC_ERROR;
+    const statusCode = errorMappings[errorType] || 500;
+
+    // Log the error for internal tracking
+    if (statusCode === 500) {
+        console.error('Server Error:', error);
+    }
 
     handleErrorStatus({errorType, response, statusCode});
 }

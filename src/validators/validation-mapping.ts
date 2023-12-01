@@ -33,14 +33,14 @@ export const validators: {
     GeoLocation({latitude, longitude}: GeoLocationRequest) {
         return Boolean(latitude && longitude);
     },
-    GoogleReview({placeId}: GoogleReviewRequest) {
+    Review({placeId}: GoogleReviewRequest) {
         return Boolean(placeId);
     },
     MeCard({firstName, lastName, phone1}: MeCardRequest) {
         return Boolean(firstName && lastName && phone1);
     },
-    Phone(data: PhoneRequest) {
-        return Boolean(data.phone);
+    Phone({phone}: PhoneRequest) {
+        return Boolean(phone);
     },
     SMS({phone, sms}: SMSRequest) {
         return Boolean(phone && sms);

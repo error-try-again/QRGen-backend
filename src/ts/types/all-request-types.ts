@@ -33,7 +33,7 @@ export type RequestTypeMap = {
     Email: EmailRequest;
     Event: EventRequest;
     GeoLocation: GeoLocationRequest;
-    GoogleReview: GoogleReviewRequest;
+    Review: GoogleReviewRequest;
     MeCard: MeCardRequest;
     Phone: PhoneRequest;
     SMS: SMSRequest;

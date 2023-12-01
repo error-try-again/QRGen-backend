@@ -36,7 +36,7 @@ export const formatters: {
     Email: formatEmail as FormatHandler<EmailRequest>,
     Event: formatEvent as FormatHandler<EventRequest>,
     GeoLocation: formatGeoLocation as FormatHandler<GeoLocationRequest>,
-    GoogleReview: formatGoogleReview as FormatHandler<GoogleReviewRequest>,
+    Review: formatGoogleReview as FormatHandler<GoogleReviewRequest>,
     MeCard: formatMeCard as FormatHandler<MeCardRequest>,
     Phone: formatPhone as FormatHandler<PhoneRequest>,
     SMS: formatSMS as FormatHandler<SMSRequest>,

@@ -20,7 +20,7 @@ async function geocodeAddress(address: string): Promise<any> {
     }
 }
 
-async function reverseGeocodeLatLng(lat: number, lng: number): Promise<any> {
+export async function reverseGeocodeLatLng(lat: number, lng: number): Promise<any> {
     const apiKey = getApiKey();
     try {
         const response = await client.reverseGeocode({
@@ -49,14 +49,6 @@ export async function handleSearchAutocomplete(searchString: string): Promise<an
         throw error;
     }
 }
-
-export const retrievePlaceByLatLng = async (latitude: number, longitude: number): Promise<void> => {
-    try {
-        await reverseGeocodeLatLng(latitude, longitude);
-    } catch (error) {
-        throw error;
-    }
-};
 
 export const retrievePlaceByAddress = async (address: string): Promise<void> => {
     try {
