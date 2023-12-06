@@ -1,19 +1,21 @@
-export interface UrlRequest {
+import {BaseQRData} from "./helper-interfaces.ts";
+
+export interface UrlRequest extends BaseQRData {
     url?: string;
 }
 
-export interface TextRequest {
+export interface TextRequest extends BaseQRData {
     text?: string;
 }
 
-export interface WifiRequest {
+export interface WifiRequest extends BaseQRData {
     encryption?: 'WEP' | 'WPA' | 'WPA2' | 'WPA3';
     hidden?: boolean;
     password?: string;
     ssid?: string;
 }
 
-export interface EmailRequest {
+export interface EmailRequest extends BaseQRData {
     bcc?: string;
     body?: string;
     cc?: string;
@@ -21,39 +23,39 @@ export interface EmailRequest {
     subject?: string;
 }
 
-export interface PhoneRequest {
+export interface PhoneRequest extends BaseQRData {
     phone?: string;
 }
 
-export interface SMSRequest {
+export interface SMSRequest extends BaseQRData {
     phone?: string;
     sms?: string;
 }
 
-export interface EventRequest {
+export interface EventRequest extends BaseQRData {
     endTime?: string;
     event?: string;
     startTime?: string;
     venue?: string;
 }
 
-export interface GeoLocationRequest {
+export interface GeoLocationRequest extends BaseQRData {
     latitude?: string;
     longitude?: string;
 }
 
-export interface CryptoRequest {
+export interface CryptoRequest extends BaseQRData {
     address?: string;
     amount?: string;
     cryptoType?: string;
 }
 
-export interface ZoomRequest {
+export interface ZoomRequest extends BaseQRData {
     zoomId?: string;
     zoomPass?: string;
 }
 
-export interface VCardRequest {
+export interface VCardRequest extends BaseQRData {
     version?: string;
     city?: string;
     country?: string;
@@ -73,7 +75,7 @@ export interface VCardRequest {
     zipcode?: string;
 }
 
-export interface MeCardRequest {
+export interface MeCardRequest extends BaseQRData {
     birthday?: string;
     city?: string;
     country?: string;
@@ -91,6 +93,6 @@ export interface MeCardRequest {
     zipcode?: string;
 }
 
-export interface GoogleReviewRequest {
+export interface GoogleReviewRequest extends BaseQRData {
     placeId?: string;
 }

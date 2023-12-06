@@ -16,7 +16,7 @@ import {
     ZoomRequest
 } from '../ts/interfaces/qr-code-request-interfaces.ts';
 import {formatEmail} from './format-email.ts';
-import {formatEvent} from './format-v-calender.ts';
+import {formatEvent} from './format-event.ts';
 import {formatVCard} from './format-v-card.ts';
 import {formatMeCard} from './format-me-card.ts';
 import {formatZoom} from './format-zoom.ts';

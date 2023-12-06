@@ -1,5 +1,5 @@
 import {EventRequest} from '../ts/interfaces/qr-code-request-interfaces.ts';
-import {formatDatetime} from '../utils/format-date-time.ts';
+import {formatDatetime} from './format-date-time.ts';
 
 export const formatEvent = (data: EventRequest): string =>
     [
