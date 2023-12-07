@@ -34,7 +34,7 @@ export const processSingleQRCode = async ({
 
     updatedData = handleDataTypeSwitching(type, customData);
 
-    if (updatedPrecision && updatedSize && updatedData) {
+    if (updatedPrecision && updatedSize && updatedData && updatedMargin && updatedColours) {
         const qrCodeData = await generateQR({
             colors: updatedColours,
             data: updatedData,
@@ -58,7 +58,6 @@ export const processSingleQRCode = async ({
     }
 };
 
-// Process a batch of QR codes in parallel
 export const generateQRCodesForBatch = async ({
                                                   qrData
                                               }: BatchQRDataParameters): Promise<ProcessedQRData<AllRequests>[]> => {

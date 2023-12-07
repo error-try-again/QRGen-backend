@@ -80,6 +80,7 @@ const isTypeInvalid = <T extends AllRequests>({
     return !validator(qrData.customData);
 };
 
+// TODO: fix this
 const isEventDateInvalid = <T extends AllRequests>({
                                                        qrData
                                                    }: QRGenericData<T>): boolean => {

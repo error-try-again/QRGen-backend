@@ -42,12 +42,11 @@ export function errorHandlingMapping(error: Error, response: Response, next: Nex
             // details: error.stack
         }
     });
-
 }
 
-export const validateRequest = async (request: Request, response: Response, next: NextFunction) => {
+export const validateRequest = async ({body}: Request, response: Response, next: NextFunction) => {
     try {
-        validateQRData(request.body);
+        validateQRData(body);
     } catch (error) {
         if (error instanceof Error) {
             errorHandlingMapping(error, response, next);
