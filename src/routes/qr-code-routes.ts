@@ -36,10 +36,10 @@ router.post('/places', asyncErrorHandler(async (request: Request, response: Resp
     });
 }));
 
-router.post('/autocomplete', asyncErrorHandler(async (request: Request) => {
+router.post('/autocomplete', asyncErrorHandler(async (request: Request, response: Response) => {
     const {body: {location}} = request;
-    await handleSearchAutocomplete(location).then((response) => {
-        response.json({response});
+    await handleSearchAutocomplete(location).then((res) => {
+        response.json({res});
     });
 }));
 
