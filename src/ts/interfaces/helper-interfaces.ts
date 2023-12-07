@@ -1,8 +1,12 @@
 import {QRCodeErrorCorrectionLevel} from 'qrcode';
 
-interface BaseQRData {
+export interface BaseQRData {
     type: string;
     margin?: number;
+    colors: {
+        dark: string;
+        light: string;
+    };
     size: number;
     precision?: QRCodeErrorCorrectionLevel;
 }

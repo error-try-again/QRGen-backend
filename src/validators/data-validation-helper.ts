@@ -3,10 +3,8 @@ import {QRData} from "../ts/interfaces/helper-interfaces.ts";
 import {validators} from "./validation-mapping.ts";
 import {MAX_QR_CODES} from "../config.ts";
 import {ErrorType} from "../ts/enums/error-enum.ts";
-import {
-    QRGenericData,
-    QRGenericDataArray
-} from "../ts/interfaces/qr-data-paramaters-interfaces.ts";
+import {QRGenericData, QRGenericDataArray} from "../ts/interfaces/qr-data-paramaters-interfaces.ts";
+import {EventRequest} from "../ts/interfaces/qr-code-request-interfaces.ts";
 
 // Validates the qrData for a batch of QR codes
 export const validateBatchQRData = <T extends AllRequests>({
@@ -45,6 +43,9 @@ export const validateQRData = <T extends AllRequests>(
     if (isTypeInvalid({qrData: qrData})) {
         throw new Error(ErrorType.INVALID_TYPE);
     }
+    if (isEventDateInvalid({qrData})) {
+        throw new Error(ErrorType.INVALID_DATE_OR_TIME);
+    }
 };
 
 // Checks if the request qrData body is missing
@@ -79,8 +80,27 @@ const isTypeInvalid = <T extends AllRequests>({
     return !validator(qrData.customData);
 };
 
-// Checks if the qrData is not an array or is empty
+// TODO: fix this
+const isEventDateInvalid = <T extends AllRequests>({
+                                                       qrData
+                                                   }: QRGenericData<T>): boolean => {
+    if (qrData.type as keyof RequestTypeMap) {
+        // check if the type is event and if the customData is of type EventRequest
+        if (qrData.type === 'event' && qrData.customData as EventRequest) {
+            const eventRequest = qrData.customData as EventRequest;
+            if (eventRequest && eventRequest.startTime) {
+                const startTime = new Date(String(eventRequest.startTime));
+                const endTime = new Date(String(eventRequest.endTime));
+                if (startTime > endTime || startTime < new Date()) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+};
 
+// Checks if the qrData is not an array or is empty
 const isNotArrayOrIsEmpty = <T extends AllRequests>({
                                                         qrData
                                                     }: QRGenericDataArray<T>): boolean => {

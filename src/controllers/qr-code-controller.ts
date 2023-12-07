@@ -7,26 +7,21 @@ import {
     BatchQRDataParameters,
     SingleQRDataParameters
 } from '../ts/interfaces/qr-data-paramaters-interfaces.ts';
-import {
-    DEFAULT_MARGIN,
-    DEFAULT_QR_PRECISION,
-    DEFAULT_QR_SIZE
-} from "../config.ts";
+import {DEFAULT_MARGIN, DEFAULT_QR_PRECISION, DEFAULT_QR_SIZE} from "../config.ts";
 
 export const processSingleQRCode = async ({
                                               qrData: {
                                                   type,
                                                   customData,
-                                                  margin,
-                                                  size,
-                                                  precision
                                               }
                                           }: SingleQRDataParameters): Promise<ProcessedQRData<AllRequests>> => {
-
     let updatedData;
-    let updatedMargin = margin;
-    let updatedSize = size;
-    let updatedPrecision = precision;
+
+    // If the QR code has a custom colour, margin, size or precision, use it, otherwise use the default values
+    let updatedColours = customData.colors || {dark: '#000000', light: '#ffffff'};
+    let updatedMargin = customData.margin || DEFAULT_MARGIN;
+    let updatedSize = customData.size || DEFAULT_QR_SIZE;
+    let updatedPrecision = customData.precision || DEFAULT_QR_PRECISION;
 
     const checkInitialData = () => {
         if (!type || !customData) {
@@ -35,43 +30,34 @@ export const processSingleQRCode = async ({
         return;
     };
 
-    const handleUnsetValues = () => {
-        if (!margin) {
-            updatedMargin = DEFAULT_MARGIN;
-        }
-        if (!size) {
-            updatedSize = DEFAULT_QR_SIZE;
-        }
-        if (!precision) {
-            updatedPrecision = DEFAULT_QR_PRECISION;
-        }
-    };
-
     checkInitialData();
-    handleUnsetValues();
 
-    try {
-        updatedData = handleDataTypeSwitching(type, customData);
-    } catch {
-        throw new Error(ErrorType.INVALID_TYPE);
-    }
+    updatedData = handleDataTypeSwitching(type, customData);
 
-    if (updatedPrecision && updatedSize && updatedData) {
+    if (updatedPrecision && updatedSize && updatedData && updatedMargin && updatedColours) {
         const qrCodeData = await generateQR({
+            colors: updatedColours,
             data: updatedData,
             margin: updatedMargin,
-            size: updatedSize,
-            precision: updatedPrecision
+            precision: updatedPrecision,
+            size: updatedSize
         });
 
-        return {type, customData, size, precision, qrCodeData};
+        return {
+            colors: updatedColours,
+            customData,
+            margin: updatedMargin,
+            precision: updatedPrecision,
+            qrCodeData,
+            size: updatedSize,
+            type
+        };
 
     } else {
         throw new Error(ErrorType.MISSING_CUSTOM_DATA);
     }
 };
 
-// Process a batch of QR codes in parallel
 export const generateQRCodesForBatch = async ({
                                                   qrData
                                               }: BatchQRDataParameters): Promise<ProcessedQRData<AllRequests>[]> => {

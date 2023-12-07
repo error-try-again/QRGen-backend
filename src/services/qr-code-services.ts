@@ -1,10 +1,9 @@
 import QRCode from 'qrcode';
 import {DEFAULT_QR_SIZE} from '../config.ts';
-import {
-    GenerateQRParameters
-} from '../ts/interfaces/qr-data-paramaters-interfaces.ts';
+import {GenerateQRParameters} from '../ts/interfaces/qr-data-paramaters-interfaces.ts';
 
 export const generateQR = async ({
+                                     colors,
                                      data,
                                      margin,
                                      size,
@@ -17,6 +16,10 @@ export const generateQR = async ({
     }
 
     return QRCode.toDataURL(data, {
+        color: {
+            dark: colors.dark || '#000000',
+            light: colors.light || '#ffffff'
+        },
         errorCorrectionLevel: precision,
         margin: margin,
         type: 'image/png',
