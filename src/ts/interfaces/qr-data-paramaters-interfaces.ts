@@ -19,6 +19,10 @@ export interface QRGenericDataArray<T extends AllRequests> {
 }
 
 export interface GenerateQRParameters {
+    colors: {
+        dark: string;
+        light: string;
+    };
     data: string;
     margin?: number;
     size: string | number;

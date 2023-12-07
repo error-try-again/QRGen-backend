@@ -2,7 +2,6 @@ import {ProcessedQRData} from '../../ts/interfaces/helper-interfaces.ts';
 import {AllRequests} from '../../ts/types/all-request-types.ts';
 import {Response} from 'express';
 import archiver, {Archiver} from 'archiver';
-import {handleErrorStatus} from './handle-error-status.ts';
 import {ErrorType} from '../../ts/enums/error-enum.ts';
 
 async function setArchiveHeaders(response: Response) {
@@ -18,10 +17,6 @@ async function setArchiveHeaders(response: Response) {
             `attachment; filename=bulk_qr_${dateStamp}.zip`
         );
     } catch {
-        handleErrorStatus({
-            response,
-            errorType: ErrorType.ERROR_SETTING_HEADERS
-        });
         throw new TypeError(ErrorType.ERROR_SETTING_HEADERS);
     }
 }
@@ -32,39 +27,25 @@ export async function prepareAndSendArchive(
 ) {
     try {
         const archive = archiver('zip') as Archiver;
-
         await setArchiveHeaders(response);
-
         archive.pipe(response);
-
-        appendQRCodesToArchive({response, qrCodes, archive});
-
+        appendQRCodesToArchive({qrCodes, archive});
         await archive.finalize();
     } catch (error) {
         if (error instanceof Error) {
-            handleErrorStatus({
-                response,
-                errorType: ErrorType.ERROR_FINALIZING_ARCHIVE
-            });
             throw new TypeError(ErrorType.ERROR_FINALIZING_ARCHIVE);
         } else {
-            handleErrorStatus({
-                response,
-                errorType: ErrorType.UNKNOWN_ARCHIVE_ERROR
-            });
             throw new TypeError(ErrorType.UNKNOWN_ARCHIVE_ERROR);
         }
     }
 }
 
 function appendQRCodesToArchive({
-                                    response,
                                     qrCodes,
                                     archive
                                 }: {
     archive: Archiver;
     qrCodes: ProcessedQRData<AllRequests>[];
-    response: Response;
 }) {
     // Append QR codes to archive with a unique name for each file
     for (const [index, qrCode] of qrCodes.entries()) {
@@ -88,10 +69,6 @@ function appendQRCodesToArchive({
                 archive.append(buffer, {name: fileName});
             }
         } catch {
-            handleErrorStatus({
-                response,
-                errorType: ErrorType.ERROR_APPENDING_FILES
-            });
             throw new TypeError(ErrorType.ERROR_APPENDING_FILES);
         }
     }

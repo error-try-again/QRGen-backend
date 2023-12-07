@@ -32,20 +32,20 @@ export const ssl = process.env['USE_SSL'] === 'true';
 // Function to start HTTPS server
 const startHttpsServer = () => {
     import('node:fs')
-        .then(fs => {
-            import('node:https').then(https => {
-                const sslOptions = {
-                    key: fs.readFileSync('/etc/ssl/certs/privkey.pem'),
-                    cert: fs.readFileSync('/etc/ssl/certs/fullchain.pem')
-                };
-                https.createServer(sslOptions, app).listen(PORT, () => {
-                    console.log(`HTTPS server running on https://localhost:${PORT}`);
-                });
+    .then(fs => {
+        import('node:https').then(https => {
+            const sslOptions = {
+                key: fs.readFileSync('/etc/ssl/certs/privkey.pem'),
+                cert: fs.readFileSync('/etc/ssl/certs/fullchain.pem')
+            };
+            https.createServer(sslOptions, app).listen(PORT, () => {
+                console.log(`HTTPS server running on https://localhost:${PORT}`);
             });
-        })
-        .catch(error => {
-            console.error('Failed to start HTTPS server:', error);
         });
+    })
+    .catch(error => {
+        console.error('Failed to start HTTPS server:', error);
+    });
 };
 
 // Start server based on SSL configuration
