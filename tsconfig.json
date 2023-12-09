@@ -20,10 +20,8 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "allowImportingTsExtensions": true
   },
   "include": [
     "src/**/*.ts"
   ]
-  // Source files to be compiled
 }
