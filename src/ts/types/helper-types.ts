@@ -1,3 +1,3 @@
-import {AllRequests} from './all-request-types.ts';
+import { AllRequests } from './all-request-types';
 
 export type FormatHandler<T extends AllRequests> = (data: T) => string;

@@ -1,156 +1,155 @@
-import {AllRequests, RequestTypeMap} from "../ts/types/all-request-types.ts";
-import {QRData} from "../ts/interfaces/helper-interfaces.ts";
-import {validators} from "./validation-mapping.ts";
-import {MAX_QR_CODES} from "../config.ts";
-import {ErrorType} from "../ts/enums/error-enum.ts";
-import {QRGenericData, QRGenericDataArray} from "../ts/interfaces/qr-data-paramaters-interfaces.ts";
-import {EventRequest} from "../ts/interfaces/qr-code-request-interfaces.ts";
+import { AllRequests, RequestTypeMap } from '../ts/types/all-request-types';
+import { QRData } from '../ts/interfaces/helper-interfaces';
+import { validators } from './validation-mapping';
+import { MAX_QR_CODES } from '../config';
+import { ErrorType } from '../ts/enums/error-enum';
+import { QRGenericData, QRGenericDataArray } from '../ts/interfaces/qr-data-paramaters-interfaces';
+import { EventRequest } from '../ts/interfaces/qr-code-request-interfaces';
 
 // Validates the qrData for a batch of QR codes
 export const validateBatchQRData = <T extends AllRequests>({
-                                                               qrData
+                                                             qrData
                                                            }: QRGenericDataArray<T>): void => {
-    if (isNotArrayOrIsEmpty({qrData})) {
-        throw new Error(ErrorType.BATCH_MISSING_DATA_BODY);
-    }
-    if (elementsMissingData({qrData})) {
-        throw new Error(ErrorType.BATCH_MISSING_DATA_BODY);
-    }
-    if (hasDuplicateQRCodeElements({qrData})) {
-        throw new Error(ErrorType.DUPLICATE_QR_CODES);
-    }
-    if (exceedsMaxLimits({qrData})) {
-        throw new Error(ErrorType.EXCEEDS_MAX_LIMIT);
-    }
-    if (elementsMissingCustomData({qrData})) {
-        throw new Error(ErrorType.BATCH_MISSING_CUSTOM_DATA);
-    }
-    if (hasInvalidElementType({qrData})) {
-        throw new Error(ErrorType.INVALID_TYPE);
-    }
+  if (isNotArrayOrIsEmpty({ qrData })) {
+    throw new Error(ErrorType.BATCH_MISSING_DATA_BODY);
+  }
+  if (elementsMissingData({ qrData })) {
+    throw new Error(ErrorType.BATCH_MISSING_DATA_BODY);
+  }
+  if (hasDuplicateQRCodeElements({ qrData })) {
+    throw new Error(ErrorType.DUPLICATE_QR_CODES);
+  }
+  if (exceedsMaxLimits({ qrData })) {
+    throw new Error(ErrorType.EXCEEDS_MAX_LIMIT);
+  }
+  if (elementsMissingCustomData({ qrData })) {
+    throw new Error(ErrorType.BATCH_MISSING_CUSTOM_DATA);
+  }
+  if (hasInvalidElementType({ qrData })) {
+    throw new Error(ErrorType.INVALID_TYPE);
+  }
 };
 
 // Validates the qrData for a single QR code
 export const validateQRData = <T extends AllRequests>(
-    qrData: QRData<T>
+  qrData: QRData<T>
 ): void => {
-    if (isDataMissing({qrData: qrData})) {
-        throw new Error(ErrorType.MISSING_DATA_BODY);
-    }
-    if (isCustomDataMissing({qrData: qrData})) {
-        throw new Error(ErrorType.MISSING_CUSTOM_DATA);
-    }
-    if (isTypeInvalid({qrData: qrData})) {
-        throw new Error(ErrorType.INVALID_TYPE);
-    }
-    if (isEventDateInvalid({qrData})) {
-        throw new Error(ErrorType.INVALID_DATE_OR_TIME);
-    }
+  if (isDataMissing({ qrData: qrData })) {
+    throw new Error(ErrorType.MISSING_DATA_BODY);
+  }
+  if (isCustomDataMissing({ qrData: qrData })) {
+    throw new Error(ErrorType.MISSING_CUSTOM_DATA);
+  }
+  if (isTypeInvalid({ qrData: qrData })) {
+    throw new Error(ErrorType.INVALID_TYPE);
+  }
+  if (isEventDateInvalid({ qrData })) {
+    throw new Error(ErrorType.INVALID_DATE_OR_TIME);
+  }
 };
 
 // Checks if the request qrData body is missing
 const isDataMissing = <T extends AllRequests>({
-                                                  qrData
+                                                qrData
                                               }: QRGenericData<T>): boolean => {
-    return !qrData;
+  return !qrData;
 };
 
 // Checks if the custom qrData object is missing
 const isCustomDataMissing = <T extends AllRequests>({
-                                                        qrData
+                                                      qrData
                                                     }: QRGenericData<T>): boolean => {
-    return !qrData.customData;
+  return !qrData.customData;
 };
 
 // Checks if validator exists, if not, the type is invalid
 const isValidatorMissing = <T extends AllRequests>({
-                                                       qrData
+                                                     qrData
                                                    }: QRGenericData<T>): boolean => {
-    return !validators[qrData.type as keyof RequestTypeMap];
+  return !validators[qrData.type as keyof RequestTypeMap];
 };
 
 // Checks if the custom qrData is valid for the given type
 const isTypeInvalid = <T extends AllRequests>({
-                                                  qrData
+                                                qrData
                                               }: QRGenericData<T>): boolean => {
-    if (isValidatorMissing({qrData: qrData})) {
-        return true;
-    }
-    const validator = validators[qrData.type as keyof RequestTypeMap];
-    return !validator(qrData.customData);
+  if (isValidatorMissing({ qrData: qrData })) {
+    return true;
+  }
+  const validator = validators[qrData.type as keyof RequestTypeMap];
+  return !validator(qrData.customData);
 };
 
 // TODO: fix this
 const isEventDateInvalid = <T extends AllRequests>({
-                                                       qrData
+                                                     qrData: { customData, type }
                                                    }: QRGenericData<T>): boolean => {
-    if (qrData.type as keyof RequestTypeMap) {
-        // check if the type is event and if the customData is of type EventRequest
-        if (qrData.type === 'event' && qrData.customData as EventRequest) {
-            const eventRequest = qrData.customData as EventRequest;
-            if (eventRequest && eventRequest.startTime) {
-                const startTime = new Date(String(eventRequest.startTime));
-                const endTime = new Date(String(eventRequest.endTime));
-                if (startTime > endTime || startTime < new Date()) {
-                    return true;
-                }
-            }
+  if (type as keyof RequestTypeMap &&
+    // check if the type is event and if the customData is of type EventRequest
+    type === 'event' && customData as EventRequest) {
+      const eventRequest = customData as EventRequest;
+      if (eventRequest && eventRequest.startTime) {
+        const startTime = new Date(String(eventRequest.startTime));
+        const endTime = new Date(String(eventRequest.endTime));
+        if (startTime > endTime || startTime < new Date()) {
+          return true;
         }
+      }
     }
-    return false;
+  return false;
 };
 
 // Checks if the qrData is not an array or is empty
 const isNotArrayOrIsEmpty = <T extends AllRequests>({
-                                                        qrData
+                                                      qrData
                                                     }: QRGenericDataArray<T>): boolean => {
-    return !Array.isArray(qrData) || qrData.length === 0;
+  return !Array.isArray(qrData) || qrData.length === 0;
 };
 
 // Checks if there are duplicate QR code elements using hash mapping
 const hasDuplicateQRCodeElements = <T extends AllRequests>({
-                                                               qrData
+                                                             qrData
                                                            }: QRGenericDataArray<T>): boolean => {
-    const hashMapping: {
-        [key: string]: boolean;
-    } = {};
-    for (const element of qrData) {
-        const hash = JSON.stringify(element);
-        if (hashMapping[hash]) {
-            return true;
-        }
-        hashMapping[hash] = true;
+  const hashMapping: {
+    [key: string]: boolean;
+  } = {};
+  for (const element of qrData) {
+    const hash = JSON.stringify(element);
+    if (hashMapping[hash]) {
+      return true;
     }
-    return false;
+    hashMapping[hash] = true;
+  }
+  return false;
 };
 
 // Checks if the number of QR codes exceeds the maximum limit
 const exceedsMaxLimits = <T extends AllRequests>({
-                                                     qrData
+                                                   qrData
                                                  }: QRGenericDataArray<T>): boolean => {
-    return qrData.length > MAX_QR_CODES;
+  return qrData.length > MAX_QR_CODES;
 };
 
 // Checks if any of the elements are missing qrData
 const elementsMissingData = <T extends AllRequests>({
-                                                        qrData
+                                                      qrData
                                                     }: QRGenericDataArray<T>): boolean =>
-    qrData.some(element => {
-        return isDataMissing({qrData: element});
-    });
+  qrData.some(element => {
+    return isDataMissing({ qrData: element });
+  });
 
 // Checks if any of the elements are missing custom qrData
 const elementsMissingCustomData = <T extends AllRequests>({
-                                                              qrData
+                                                            qrData
                                                           }: QRGenericDataArray<T>): boolean =>
-    qrData.some(element => {
-        return isCustomDataMissing({qrData: element});
-    });
+  qrData.some(element => {
+    return isCustomDataMissing({ qrData: element });
+  });
 
 // Checks if any of the elements have an invalid type
 const hasInvalidElementType = <T extends AllRequests>({
-                                                          qrData
+                                                        qrData
                                                       }: QRGenericDataArray<T>): boolean =>
-    qrData.some(element => {
-        return isTypeInvalid({qrData: element});
-    });
+  qrData.some(element => {
+    return isTypeInvalid({ qrData: element });
+  });

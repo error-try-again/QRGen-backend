@@ -2,7 +2,8 @@ import {
     CryptoRequest,
     EmailRequest,
     EventRequest,
-    GeoLocationRequest, GoogleReviewRequest,
+    GeoLocationRequest,
+    GoogleReviewRequest,
     MeCardRequest,
     PhoneRequest,
     SMSRequest,
@@ -11,35 +12,35 @@ import {
     VCardRequest,
     WifiRequest,
     ZoomRequest
-} from '../interfaces/qr-code-request-interfaces.ts';
+} from '../interfaces/qr-code-request-interfaces';
 
 export type AllRequests =
-    | TextRequest
-    | UrlRequest
-    | EmailRequest
-    | PhoneRequest
-    | SMSRequest
-    | GeoLocationRequest
-    | WifiRequest
-    | EventRequest
-    | CryptoRequest
-    | VCardRequest
-    | MeCardRequest
-    | ZoomRequest
-    | GoogleReviewRequest;
+  | TextRequest
+  | UrlRequest
+  | EmailRequest
+  | PhoneRequest
+  | SMSRequest
+  | GeoLocationRequest
+  | WifiRequest
+  | EventRequest
+  | CryptoRequest
+  | VCardRequest
+  | MeCardRequest
+  | ZoomRequest
+  | GoogleReviewRequest;
 
 export type RequestTypeMap = {
-    Crypto: CryptoRequest;
-    Email: EmailRequest;
-    Event: EventRequest;
-    GeoLocation: GeoLocationRequest;
-    Review: GoogleReviewRequest;
-    MeCard: MeCardRequest;
-    Phone: PhoneRequest;
-    SMS: SMSRequest;
-    Text: TextRequest;
-    Url: UrlRequest;
-    VCard: VCardRequest;
-    WiFi: WifiRequest;
-    Zoom: ZoomRequest;
+  Crypto: CryptoRequest;
+  Email: EmailRequest;
+  Event: EventRequest;
+  GeoLocation: GeoLocationRequest;
+  Review: GoogleReviewRequest;
+  MeCard: MeCardRequest;
+  Phone: PhoneRequest;
+  SMS: SMSRequest;
+  Text: TextRequest;
+  Url: UrlRequest;
+  VCard: VCardRequest;
+  WiFi: WifiRequest;
+  Zoom: ZoomRequest;
 };
