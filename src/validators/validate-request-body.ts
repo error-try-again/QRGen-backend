@@ -19,7 +19,10 @@ const errorMappings: Record<string, number> = {
   [ErrorType.UNKNOWN_ARCHIVE_ERROR]: serverErrorStatus
 };
 
-export function errorHandlingMapping(error: Error, { headersSent, status }: Response, next: NextFunction): void {
+export function errorHandlingMapping(error: Error, {
+  headersSent,
+  status
+}: Response, next: NextFunction): void {
   if (headersSent) {
     console.error('Headers already sent. Passing error to next middleware:', error);
     return next(error);
@@ -40,7 +43,7 @@ export function errorHandlingMapping(error: Error, { headersSent, status }: Resp
     error: {
       message: error.message,
       status: statusCode,
-      type: errorType,
+      type: errorType
       // details: error.stack
     }
   });
@@ -54,11 +57,9 @@ export const validateRequest = async ({ body }: Request, response: Response, nex
   }
 };
 
-export const validateBatchRequest = async (request: Request, response: Response, next: NextFunction) => {
+export const validateBatchRequest = async ({ body }: Request, response: Response, next: NextFunction) => {
   try {
-    const { body } = request;
-    const { qrCodes } = body;
-    validateBatchQRData({ qrData: qrCodes });
+    validateBatchQRData(body);
   } catch (error) {
     if (error instanceof Error) {
       errorHandlingMapping(error, response, next);

@@ -5,40 +5,47 @@ import archiver, { Archiver } from 'archiver';
 import { ErrorType } from '../../ts/enums/error-enum';
 
 async function setArchiveHeaders(response: Response) {
-  try {
-    // Provide a unique name for the archive corresponding to the date and time
-    const dateStamp = new Date()
-    .toISOString()
-    .slice(0, 19)
-    .replaceAll(':', '-');
-    response.setHeader('Content-Type', 'application/zip');
-    response.setHeader(
-      'Content-Disposition',
-      `attachment; filename=bulk_qr_${dateStamp}.zip`
-    );
-  } catch {
-    throw new TypeError(ErrorType.ERROR_SETTING_HEADERS);
-  }
+    if (response.headersSent) {
+        console.error('Attempted to set headers, but they were already sent.');
+        throw new Error('Headers already sent');
+    }
+    try {
+        const dateStamp = new Date().toISOString().slice(0, 19).replaceAll(':', '-');
+        response.setHeader(
+            'Content-Disposition',
+            `attachment; filename=bulk_qr_${dateStamp}.zip`
+        );
+    } catch (error) {
+        console.error('Error setting headers:', error);
+        throw new Error('Error occurred while setting headers');
+    }
 }
+
 
 export async function prepareAndSendArchive(
   qrCodes: ProcessedQRData<AllRequests>[],
   response: Response
 ) {
-  try {
-    const archive = archiver('zip') as Archiver;
-    await setArchiveHeaders(response);
-    archive.pipe(response);
-    appendQRCodesToArchive({ qrCodes, archive });
-    await archive.finalize();
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new TypeError(ErrorType.ERROR_FINALIZING_ARCHIVE);
-    } else {
-      throw new TypeError(ErrorType.UNKNOWN_ARCHIVE_ERROR);
+    const archive = archiver('zip');
+    try {
+        await setArchiveHeaders(response);
+        archive.pipe(response);
+
+        // Append QR codes to the archive
+        appendQRCodesToArchive({ qrCodes, archive });
+
+        // Logging before finalizing
+        console.log("Finalizing archive");
+        await archive.finalize();
+        console.log("Archive has been finalized");
+    } catch (error) {
+        console.error('Error during archiving:', error);
+        if (!response.headersSent) {
+            response.status(500).send('Error generating archive');
+        }
     }
-  }
 }
+
 
 function appendQRCodesToArchive({
                                   qrCodes,
@@ -53,9 +60,9 @@ function appendQRCodesToArchive({
     let fileName = '';
 
     try {
-      // Ensure qrCode.qrCodeData is a string and starts with the expected format
-      if (qrCode.qrCodeData.startsWith('data:image/png;base64,')) {
-        buffer = Buffer.from(qrCode.qrCodeData.split(',')[1], 'base64');
+      // Ensure qrCode.qrData is a string and starts with the expected format
+      if (qrCode.qrData.startsWith('data:image/png;base64,')) {
+        buffer = Buffer.from(qrCode.qrData.split(',')[1], 'base64');
         fileName = `${qrCode.type}_${index}.png`;
       }
     } catch {

@@ -35,7 +35,7 @@ export const processSingleQRCode = async ({
   const updatedData = handleDataTypeSwitching(type, customData);
 
   if (updatedPrecision && updatedSize && updatedData && updatedMargin && updatedColours) {
-    const qrCodeData = await generateQR({
+    const qrData = await generateQR({
       colors: updatedColours,
       data: updatedData,
       margin: updatedMargin,
@@ -48,7 +48,7 @@ export const processSingleQRCode = async ({
       customData,
       margin: updatedMargin,
       precision: updatedPrecision,
-      qrCodeData,
+      qrData,
       size: updatedSize,
       type
     };
@@ -62,6 +62,8 @@ export const generateQRCodesForBatch = async ({
                                                 qrData
                                               }: BatchQRDataParameters): Promise<ProcessedQRData<AllRequests>[]> => {
   return Promise.all(
-    qrData.map(element => processSingleQRCode({ qrData: element }))
+    qrData.map(element => {
+      return processSingleQRCode({ qrData: element });
+    })
   );
 };
