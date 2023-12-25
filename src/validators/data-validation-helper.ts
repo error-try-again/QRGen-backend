@@ -9,7 +9,7 @@ import { EventRequest } from '../ts/interfaces/qr-code-request-interfaces';
 // Validates the qrData for a batch of QR codes
 export const validateBatchQRData = <T extends AllRequests>({
                                                              qrData
-                                                           }: QRGenericDataArray<T>): void => {
+                                                           }: QRGenericDataArray<T>): boolean => {
   if (isNotArrayOrIsEmpty({ qrData })) {
     throw new Error(ErrorType.BATCH_MISSING_DATA_BODY);
   }
@@ -28,24 +28,26 @@ export const validateBatchQRData = <T extends AllRequests>({
   if (hasInvalidElementType({ qrData })) {
     throw new Error(ErrorType.INVALID_TYPE);
   }
+  return true;
 };
 
 // Validates the qrData for a single QR code
 export const validateQRData = <T extends AllRequests>(
   qrData: QRData<T>
-): void => {
-  if (isDataMissing({ qrData: qrData })) {
+): boolean => {
+  if (isDataMissing({ qrData })) {
     throw new Error(ErrorType.MISSING_DATA_BODY);
   }
-  if (isCustomDataMissing({ qrData: qrData })) {
+  if (isCustomDataMissing({ qrData })) {
     throw new Error(ErrorType.MISSING_CUSTOM_DATA);
   }
-  if (isTypeInvalid({ qrData: qrData })) {
+  if (isTypeInvalid({ qrData })) {
     throw new Error(ErrorType.INVALID_TYPE);
   }
   if (isEventDateInvalid({ qrData })) {
     throw new Error(ErrorType.INVALID_DATE_OR_TIME);
   }
+  return true;
 };
 
 // Checks if the request qrData body is missing
@@ -87,15 +89,15 @@ const isEventDateInvalid = <T extends AllRequests>({
   if (type as keyof RequestTypeMap &&
     // check if the type is event and if the customData is of type EventRequest
     type === 'event' && customData as EventRequest) {
-      const eventRequest = customData as EventRequest;
-      if (eventRequest && eventRequest.startTime) {
-        const startTime = new Date(String(eventRequest.startTime));
-        const endTime = new Date(String(eventRequest.endTime));
-        if (startTime > endTime || startTime < new Date()) {
-          return true;
-        }
+    const eventRequest = customData as EventRequest;
+    if (eventRequest && eventRequest.startTime) {
+      const startTime = new Date(String(eventRequest.startTime));
+      const endTime = new Date(String(eventRequest.endTime));
+      if (startTime > endTime || startTime < new Date()) {
+        return true;
       }
     }
+  }
   return false;
 };
 
