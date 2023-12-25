@@ -20,5 +20,5 @@ export interface QRData<
 }
 
 export interface ProcessedQRData<T> extends QRData<T> {
-  qrCodeData: string;
+  qrData: string;
 }
