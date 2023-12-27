@@ -1,3 +1,4 @@
+
 import express, { NextFunction, Request, Response, Router } from 'express';
 import { generateQRCodesForBatch, processSingleQRCode } from '../controllers/qr-code-controller';
 import { prepareAndSendArchive } from './helpers/archival-helpers';
@@ -33,8 +34,6 @@ router.post('/batch', asyncErrorHandler(async (request, response, next) => {
     next(error);
   }
 }));
-
-
 
 router.post('/places', asyncErrorHandler(async (request: Request, response: Response) => {
   const { body: { latitude, longitude } } = request;
