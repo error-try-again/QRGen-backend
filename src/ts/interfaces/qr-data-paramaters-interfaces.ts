@@ -24,7 +24,8 @@ export interface GenerateQRParameters {
     light: string;
   };
   data: string;
+  label?: string;
   margin?: number;
-  size: string | number;
   precision: QRCodeErrorCorrectionLevel;
+  size: string | number;
 }
