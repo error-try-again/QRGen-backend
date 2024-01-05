@@ -1,7 +1,8 @@
-## Backend for QRGen
+# QRGen Backend
 
 *This is an optional submodule repository for the backend of QRGen.*
 
+# Manual Setup & Installation (without the QRGen installer)
 Modify the config.ts to reflect the frontend domain/port - where your requests will come from. 
 
 ```typescript
