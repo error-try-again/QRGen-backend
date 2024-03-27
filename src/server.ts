@@ -12,6 +12,7 @@ export const app = express();
 
 // Initialize dotenv
 dotenv.config({ path: './.env' });
+console.log('Environment Variables:', process.env);
 
 // Middleware Setup
 app.set('trust proxy', TRUST_PROXY);
@@ -28,9 +29,10 @@ app.use('/batch', rateLimiters.batchQRCode);
 app.use('/qr', qrCodeRoutes);
 
 export const ssl = process.env['USE_SSL'] === 'true';
+console.log('USE_SSL:', ssl);
 
 
-// Function to start HTTPS server
+// Start HTTPS Server
 const startHttpsServer = () => {
   import('node:fs')
   .then(fs => {
