@@ -31,7 +31,6 @@ app.use('/qr', qrCodeRoutes);
 export const ssl = process.env['USE_SSL'] === 'true';
 console.log('USE_SSL:', ssl);
 
-
 // Start HTTPS Server
 const startHttpsServer = () => {
   import('node:fs')
