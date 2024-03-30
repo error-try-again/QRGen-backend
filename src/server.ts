@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { qrCodeRoutes } from './routes/qr-code-routes';
-import { JSON_BODY_LIMIT, ORIGIN, PORT, TRUST_PROXY } from './config';
+import { JSON_BODY_LIMIT, ORIGIN, PORT, TRUST_PROXY, DOMAIN } from './config';
 import { rateLimiters } from './middleware/rate-limiters';
 import dotenv from 'dotenv';
 import http from 'node:http';
@@ -12,7 +12,6 @@ export const app = express();
 
 // Initialize dotenv
 dotenv.config({ path: './.env' });
-console.log('Environment Variables:', process.env);
 
 // Middleware Setup
 app.set('trust proxy', TRUST_PROXY);
@@ -29,7 +28,6 @@ app.use('/batch', rateLimiters.batchQRCode);
 app.use('/qr', qrCodeRoutes);
 
 export const ssl = process.env['USE_SSL'] === 'true';
-console.log('USE_SSL:', ssl);
 
 // Start HTTPS Server
 const startHttpsServer = () => {
@@ -37,8 +35,8 @@ const startHttpsServer = () => {
   .then(fs => {
     import('node:https').then(https => {
       const sslOptions = {
-        key: fs.readFileSync('/etc/ssl/certs/privkey.pem'),
-        cert: fs.readFileSync('/etc/ssl/certs/fullchain.pem')
+        key: fs.readFileSync(`/etc/letsencrypt/live/${DOMAIN}/privkey.pem`),
+        cert: fs.readFileSync(`/etc/letsencrypt/live/${DOMAIN}/fullchain.pem`)
       };
       https.createServer(sslOptions, app).listen(PORT, () => {
         console.log(`HTTPS server running on https://localhost:${PORT}`);
